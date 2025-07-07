@@ -3,7 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YouTube Thumbnail Downloader</title>
+    <!-- Primary Meta Tags -->
+    <title>Free YouTube Thumbnail Downloader | HD No Watermark (2025)</title>
+    <meta name="description" content="Download YouTube thumbnails in HD for free! No registration, no watermarks. Works on mobile & desktop. Get thumbnails from any video instantly.">
+    <meta name="keywords" content="youtube thumbnail downloader, download youtube thumbnails, free thumbnail grabber, hd youtube thumbnails, thumbnail extractor">
+    <meta name="author" content="Haseeb Hafeez">
+    
+    <!-- Open Graph / Facebook / Twitter Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://haseebhafeez720.github.io/youtube-thumbnail-downloader/">
+    <meta property="og:title" content="Free YouTube Thumbnail Downloader | HD No Watermark (2025)">
+    <meta property="og:description" content="Download YouTube thumbnails in HD for free! No registration, no watermarks. Works on mobile & desktop.">
+    <meta property="og:image" content="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free YouTube Thumbnail Downloader | HD No Watermark (2025)">
+    <meta name="twitter:description" content="Download YouTube thumbnails in HD for free! No registration, no watermarks. Works on mobile & desktop.">
+    <meta name="twitter:image" content="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://www.youtube.com/s/desktop/d5a0a5f4/img/favicon.ico" type="image/x-icon">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://haseebhafeez720.github.io/youtube-thumbnail-downloader/">
+    
+    <!-- Structured Data (Schema.org) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "YouTube Thumbnail Downloader",
+      "description": "Free tool to download YouTube thumbnails in HD quality",
+      "url": "https://haseebhafeez720.github.io/youtube-thumbnail-downloader/",
+      "applicationCategory": "Utility",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+    
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -15,6 +56,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            line-height: 1.6;
         }
         .container {
             width: 100%;
@@ -126,6 +168,28 @@
             margin-top: 20px;
             display: none;
         }
+        
+        /* SEO Content Section */
+        .seo-content {
+            text-align: left;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: #333;
+            border-radius: 8px;
+        }
+        .seo-content h2 {
+            color: #ff0000;
+            margin-top: 0;
+        }
+        .seo-content h3 {
+            color: #ddd;
+            margin-bottom: 10px;
+        }
+        .seo-content p {
+            color: #bbb;
+            margin-bottom: 15px;
+        }
+        
         @media (max-width: 600px) {
             .input-group {
                 flex-direction: column;
@@ -152,6 +216,41 @@
         <div class="error-message" id="error-message"></div>
 
         <div class="thumbnails-grid" id="thumbnails-container"></div>
+        
+        <!-- SEO Content Section -->
+        <div class="seo-content">
+            <h2>How to Download YouTube Thumbnails?</h2>
+            <p>Our free YouTube Thumbnail Downloader makes it easy to get high-quality thumbnails from any YouTube video in seconds. Follow these simple steps:</p>
+            
+            <h3>Step 1: Copy the YouTube Video URL</h3>
+            <p>Go to YouTube and copy the URL of the video whose thumbnail you want to download. You can copy it from the address bar or by right-clicking on the video and selecting "Copy video URL".</p>
+            
+            <h3>Step 2: Paste the URL in Our Downloader</h3>
+            <p>Paste the YouTube URL in the input field above and click the "Get Thumbnails" button.</p>
+            
+            <h3>Step 3: Download Your Preferred Thumbnail</h3>
+            <p>Our tool will display all available thumbnail resolutions. Click the "Download" button below your preferred image quality to save it to your device.</p>
+            
+            <h2>Why Use Our YouTube Thumbnail Downloader?</h2>
+            <p>• <strong>100% Free</strong> - No hidden charges or watermarks</p>
+            <p>• <strong>Multiple Resolutions</strong> - Get thumbnails in HD, default, and medium quality</p>
+            <p>• <strong>No Registration</strong> - Download instantly without signing up</p>
+            <p>• <strong>Works on All Devices</strong> - Mobile, tablet, and desktop friendly</p>
+            
+            <h2>Frequently Asked Questions</h2>
+            
+            <h3>What thumbnail resolutions are available?</h3>
+            <p>Our tool extracts thumbnails in these resolutions:</p>
+            <p>• High Quality (1280×720)</p>
+            <p>• Default Quality (480×360)</p>
+            <p>• Medium Quality (320×180)</p>
+            
+            <h3>Does this work for private videos?</h3>
+            <p>No, our downloader only works for publicly available YouTube videos.</p>
+            
+            <h3>Is there a download limit?</h3>
+            <p>No! You can download as many thumbnails as you need without any restrictions.</p>
+        </div>
     </div>
 
     <script>
@@ -216,10 +315,10 @@
                 img.onload = () => {
                     if (img.height > 90) { // 90px is the height of the placeholder for non-existent thumbnails
                         card.innerHTML = `
-                            <img src="${url}" alt="${quality} Thumbnail">
+                            <img src="${url}" alt="${quality} Thumbnail for YouTube video" loading="lazy">
                             <div class="caption">
                                 <div class="quality">${quality}</div>
-                                <a href="${url}" download class="download-btn">Download</a>
+                                <a href="${url}" download="youtube-thumbnail-${quality.toLowerCase().replace(' ', '-')}.jpg" class="download-btn">Download</a>
                             </div>
                         `;
                         thumbnailsContainer.appendChild(card);
@@ -247,7 +346,27 @@
             errorMessage.style.display = 'none';
             thumbnailsContainer.innerHTML = '';
         }
+        
+        // Track conversions (for Google Analytics)
+        document.querySelectorAll('.download-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'download', {
+                        'event_category': 'engagement',
+                        'event_label': 'thumbnail_download'
+                    });
+                }
+            });
+        });
     </script>
 
+    <!-- Google Analytics (Optional) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXX');
+    </script>
 </body>
 </html>
