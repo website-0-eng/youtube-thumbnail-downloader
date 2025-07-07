@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Thumbnail Downloader</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #181818;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #282828;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #ff0000;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 1.1em;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        #url-input {
+            flex-grow: 1;
+            padding: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #121212;
+            color: #fff;
+            font-size: 1em;
+        }
+        #url-input:focus {
+            outline: none;
+            border-color: #ff0000;
+        }
+        #fetch-btn {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 8px;
+            background-color: #ff0000;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #fetch-btn:hover {
+            background-color: #cc0000;
+        }
+        .ad-placeholder {
+            width: 100%;
+            height: 90px;
+            background-color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+        }
+        .thumbnails-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .thumbnail-card {
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        .thumbnail-card:hover {
+            transform: translateY(-5px);
+        }
+        .thumbnail-card img {
+            width: 100%;
+            display: block;
+        }
+        .thumbnail-card .caption {
+            padding: 15px;
+            text-align: center;
+        }
+        .thumbnail-card .quality {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background-color: #ff0000;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #cc0000;
+        }
+        .error-message {
+            color: #ff9999;
+            background-color: #4d1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .input-group {
+                flex-direction: column;
+            }
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>YouTube Thumbnail Downloader</h1>
+        <p>Enter a YouTube video URL to download thumbnails in various resolutions.</p>
+
+        <div class="ad-placeholder">Top Ad Banner</div>
+
+        <div class="input-group">
+            <input type="text" id="url-input" placeholder="Enter YouTube URL (e.g., https://youtu.be/dQw4w9WgXcQ)">
+            <button id="fetch-btn">Get Thumbnails</button>
+        </div>
+
+        <div class="error-message" id="error-message"></div>
+
+        <div class="thumbnails-grid" id="thumbnails-container"></div>
+    </div>
+
+    <script>
+        const urlInput = document.getElementById('url-input');
+        const fetchBtn = document.getElementById('fetch-btn');
+        const thumbnailsContainer = document.getElementById('thumbnails-container');
+        const errorMessage = document.getElementById('error-message');
+
+        fetchBtn.addEventListener('click', () => {
+            const url = urlInput.value.trim();
+            if (!url) {
+                showError('Please enter a YouTube URL.');
+                return;
+            }
+
+            const videoId = extractVideoId(url);
+            if (!videoId) {
+                showError('Invalid YouTube URL. Please check the format.');
+                return;
+            }
+
+            displayThumbnails(videoId);
+        });
+
+        function extractVideoId(url) {
+            let videoId = null;
+            const patterns = [
+                /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([^&]+)/,
+                /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([^?]+)/,
+                /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([^?]+)/,
+                /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([^?]+)/
+            ];
+
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) {
+                    videoId = match[1];
+                    break;
+                }
+            }
+            return videoId;
+        }
+
+        function displayThumbnails(videoId) {
+            clearContainer();
+            const qualities = {
+                'High Quality': `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`,
+                'Default': `https://img.youtube.com/vi/${videoId}/0.jpg`,
+                'Medium Quality 1': `https://img.youtube.com/vi/${videoId}/1.jpg`,
+                'Medium Quality 2': `https://img.youtube.com/vi/${videoId}/2.jpg`,
+                'Medium Quality 3': `https://img.youtube.com/vi/${videoId}/3.jpg`,
+            };
+
+            let foundThumbnails = false;
+            for (const [quality, url] of Object.entries(qualities)) {
+                const card = document.createElement('div');
+                card.className = 'thumbnail-card';
+
+                const img = new Image();
+                img.src = url;
+                
+                img.onload = () => {
+                    if (img.height > 90) { // 90px is the height of the placeholder for non-existent thumbnails
+                        card.innerHTML = `
+                            <img src="${url}" alt="${quality} Thumbnail">
+                            <div class="caption">
+                                <div class="quality">${quality}</div>
+                                <a href="${url}" download class="download-btn">Download</a>
+                            </div>
+                        `;
+                        thumbnailsContainer.appendChild(card);
+                        foundThumbnails = true;
+                    }
+                    if (!foundThumbnails && quality === 'Medium Quality 3') {
+                         showError('Could not find any thumbnails for this video. It might be private or deleted.');
+                    }
+                };
+                img.onerror = () => {
+                     if (!foundThumbnails && quality === 'Medium Quality 3') {
+                         showError('Could not find any thumbnails for this video. It might be private or deleted.');
+                    }
+                }
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            thumbnailsContainer.innerHTML = '';
+        }
+
+        function clearContainer() {
+            errorMessage.style.display = 'none';
+            thumbnailsContainer.innerHTML = '';
+        }
+    </script>
+
+</body>
+</html>
